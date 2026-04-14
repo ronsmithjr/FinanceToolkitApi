@@ -1,8 +1,9 @@
 ﻿namespace FinanceToolkitApi.Models
 {
-    public class Continuous : Base
+    public class Continuous    
     {
-        public const decimal EULER = 2.71828M;
-        public decimal ContinuousRate { get; set; }
+        public decimal Principal { get; set; }
+        public decimal AnnualRate { get; set; }
+        public int Years { get; set; }
     }
 }

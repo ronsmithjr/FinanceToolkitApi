@@ -1,4 +1,9 @@
 ﻿namespace FinanceToolkitApi.Models
 {
-    public sealed class Simple : Base    {    }
+    public sealed class Simple
+    {
+        public decimal Principal { get; set; }
+        public decimal AnnualRate { get; set; }
+        public int Years { get; set; }
+    }
 }

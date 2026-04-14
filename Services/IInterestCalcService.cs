@@ -3,14 +3,26 @@ namespace FinanceToolkitApi.Services
 {
     public interface IInterestCalcService
     {
-        decimal CalcualateAcrruedInterest(Accrued accruedRequest);
-        decimal CalcualateAmortizedInterest(Amortized amortizedRequest);
-        decimal CalcualateCompoundInterest(Compound compoundRequest);
-        decimal CalcualateContinuousInterest(Continuous continuousRequest);
-        decimal CalcualateDailyInterest(Daily dailyRequest);
-        decimal CalcualateEffectiveRate(EffectiveRate effectiveRateRequest);
-        decimal CalcualateInflationAdjusted(InflationAdjusted inflationAdjRequest);
+        /// <summary>
+        /// Calculates simple accrued interest for a financial instrument using a day-count basis.
+        /// The accrued interest is computed using the simple interest formula:
+        /// Accrued Interest = Principal × (Annual Rate ÷ 100) × (Days Accrued ÷ Day Count Basis)
+        Dictionary<string, decimal> SimpleAccruedInterest(SimpleAccrued accruedRequest);
+        Dictionary<string, decimal> CompoundAccruedInterest(CompoundAccrued accruedRequest);
+        Dictionary<string, decimal> CalcualateCompoundInterest(CompoundAccrued compoundRequest);
+        Dictionary<string, decimal> CompoundInterestWithContributions(CompoundWithContributions compoundRequest);
+
+        Dictionary<string, decimal> AmortizedInterestPayment(Amortized amortizedRequest);
+        List<Dictionary<string, decimal>> AmortizedInterestSchedule(Amortized amortizedRequest);
+        
+        Dictionary<string, decimal> CalcualateContinuousInterest(Continuous continuousRequest);
+        Dictionary<string, decimal> CalculateDailyCompoundedInterestAmount(Daily dailyRequest);
+        Dictionary<string, decimal> CalcualateEffectiveRate(EffectiveRate effectiveRateRequest);
+        Dictionary<string, decimal> CalcualateInflationAdjusted(InflationAdjusted inflationAdjRequest);
         Dictionary<string,decimal> CalcualateSimple(Simple simpleRequest);
-        decimal CalcualateTaxAdjusted(TaxAdjusted taxAdjequest);
+        Dictionary<string, decimal> CalcualateTaxAdjusted(TaxAdjusted taxAdjequest);
+
+
+        Dictionary<string, decimal> CalcualateTaxAdjustedRealInterest(TaxAdjusted taxAdjequest);
     }
 }
