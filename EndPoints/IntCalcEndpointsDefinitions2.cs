@@ -5,6 +5,22 @@ namespace FinanceToolkitApi.EndPoints
 {
     public static partial class IntCalcEndpoints
     {
+        internal static IResult SimpleInterest(IInterestCalcService calcService, Simple simple)
+        {
+            if(simple.Principal <= 0)
+            {
+                return Results.BadRequest("Need to have a positive interest amount");
+            }
+            if(simple.AnnualRate <= 0)
+            {
+                return Results.BadRequest("Need to have a positive annual rate");
+            }
+            if(simple.Years < 0)
+            {
+                return Results.BadRequest("At this time Years cannot be less than 0.  We will handle biannual, monthly, hourly and minute interst in a future release");
+            }
+            return Results.Ok(calcService.SimpleInterest(simple));
+        }
         internal static IResult SimpleAccruedInterest(IInterestCalcService calcService, SimpleAccrued accrued)
         {
             if (accrued == null)
@@ -36,10 +52,7 @@ namespace FinanceToolkitApi.EndPoints
             {
                 return Results.BadRequest("The DayCountBasis must either be 360 or 365");
             }
-            if (accrued.DaysAccrued <= 0)
-            {
-                return Results.Ok("No calculation has been done because nothing has accrued.");
-            }
+          
             if (accrued.Principal <= 0)
             {
                 return Results.BadRequest("The principal must be greater than 0");
@@ -56,9 +69,9 @@ namespace FinanceToolkitApi.EndPoints
         {
             return Results.Ok(calcService.AmortizedInterestSchedule(amortized));
         }
-        internal static IResult Compound(IInterestCalcService calcService, CompoundAccrued compound)
+        internal static IResult Compound(IInterestCalcService calcService, Compound compound)
         {
-            return Results.Ok(calcService.CalcualateCompoundInterest(compound));
+            return Results.Ok(calcService.CompoundInterest(compound));
         }
         internal static IResult CompoundInterestWithContributions(IInterestCalcService calcService, CompoundWithContributions compound)
         {

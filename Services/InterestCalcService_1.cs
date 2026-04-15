@@ -4,6 +4,20 @@ namespace FinanceToolkitApi.Services
 {
     public partial class InterestCalcService : IInterestCalcService
     {
+        public Dictionary<string, decimal> SimpleInterest(Simple simple)
+        {
+            var total_amt = simple.Principal * simple.Years * (1 + (simple.AnnualRate / 100));
+            var interest = total_amt - simple.Principal;
+            return new Dictionary<string, decimal>()
+            {
+                {"Principal", simple.Principal },
+                {"Years", simple.Years},
+                {"Annual_Rate", simple.AnnualRate },
+                {"Total_Amount", total_amt},
+                {"Interest",interest }
+            };
+
+        }
         public Dictionary<string, decimal> SimpleAccruedInterest(SimpleAccrued accruedRequest)
         {
             decimal rate = accruedRequest.AnnualRate / 100;
@@ -18,15 +32,11 @@ namespace FinanceToolkitApi.Services
                 {"Accrued_Interest",Math.Round(accruedInterest, 4) }
             };
         }
-        public Dictionary<string, decimal> CompoundAccruedInterest(CompoundAccrued cr)
+
+        public Dictionary<string, decimal> CompoundInterest(Compound cr)
         {
             decimal n = cr.CompoundsPerYear * cr.Years;
             decimal ratePerPeriod = (cr.AnnualRate / 100) / cr.CompoundsPerYear;
-
-            // If you want to support partial periods (accrued interest for days):
-            // Uncomment and use these lines if DaysAccrued and DayCountBasis are available
-            decimal fractionOfYear = cr.DaysAccrued / (decimal)cr.DayCountBasis;
-            n = cr.CompoundsPerYear * fractionOfYear;
 
             decimal total_amt = cr.Principal * (decimal)Math.Pow((double)(1 + ratePerPeriod), (double)n);
             decimal interest = total_amt - cr.Principal;
@@ -38,10 +48,43 @@ namespace FinanceToolkitApi.Services
                 {"CompoundsPerYear", cr.CompoundsPerYear },
                 {"Years", cr.Years },
                 {"Interest", Math.Round(interest, 2) },
-                {"Total_Amount", Math.Round(total_amt, 2) },
-                {"Days Accrued", cr.DaysAccrued },
-                {"Day Count Basis", cr.DayCountBasis }
+                {"Total_Amount", Math.Round(total_amt, 2) }
             };
+        }
+
+        public List<Dictionary<string, decimal>> CompoundAccruedInterest(CompoundAccrued cr)
+        {
+            decimal ratePerPeriod = (cr.AnnualRate / 100) / cr.CompoundsPerYear;
+
+            var schedule = new List<Dictionary<string, decimal>>();
+            schedule.Add(new Dictionary<string, decimal>
+            {
+                 {"Starting_Balance", cr.Principal },
+                 {"AnnualRate", cr.AnnualRate },
+                 {"CompoundsPerYear", cr.CompoundsPerYear },
+                 {"Days Accrued", cr.DaysAccrued },
+                 {"Day Count Basis", cr.DayCountBasis }
+            });
+
+            var balance = cr.Principal;
+            decimal fractionOfYear = cr.DaysAccrued / (decimal)cr.DayCountBasis;
+            var n = cr.CompoundsPerYear * fractionOfYear;
+
+            for (int period = 1; period <= n; period++)
+            {
+                decimal interest = balance * ratePerPeriod;
+                balance = balance + interest;
+
+                decimal total_amt = balance * (1 + ratePerPeriod);
+                
+                schedule.Add(new Dictionary<string, decimal>
+                {
+                    {"Month", period },
+                    {"Interest", Math.Round(interest, 2) },
+                    {"Balance", Math.Round(balance, 2) }
+                });                
+            }
+            return schedule;
         }
 
         public Dictionary<string, decimal> AmortizedInterestPayment(Amortized ar)
@@ -93,35 +136,7 @@ namespace FinanceToolkitApi.Services
 
         }
 
-        public Dictionary<string, decimal> CalcualateCompoundInterest(CompoundAccrued cr)
-        {
-            //decimal step1 = 1 + (cr.AnnualRate / 100) / cr.CompoundsPerYear;
-            //decimal total_amt = cr.Principal * (decimal)Math.Pow((double)step1, cr.CompoundsPerYear * cr.Years);
-
-
-            //decimal interest = total_amt - cr.Principal;
-
-            decimal n = cr.CompoundsPerYear * cr.Years;
-            decimal ratePerPeriod = (cr.AnnualRate / 100) / cr.CompoundsPerYear;
-
-            decimal fractionOfYear = cr.DaysAccrued / (decimal)cr.DayCountBasis;
-            n = cr.CompoundsPerYear * fractionOfYear;
-
-            decimal total_amt = cr.Principal * (decimal)Math.Pow((double)(1 + ratePerPeriod), (double)n);
-            decimal interest = total_amt - cr.Principal;
-
-            return new Dictionary<string, decimal>
-            {
-                {"Principal",cr.Principal },
-                {"AnnualRate", cr.AnnualRate },
-                {"CompoundsPerYear", cr.CompoundsPerYear },
-                {"Years", cr.Years },
-                {"Days_Accrued", cr.DaysAccrued },
-                {"Day_Count_Basis", cr.DayCountBasis },
-                {"Interest", Math.Round(interest, 2) },
-                {"Total_Amount", Math.Round(total_amt, 2) }
-            };
-        }
+        
         /// <summary>
         /// This method produces a month‑by‑month projection of investment growth that reflects:
         /// An initial lump‑sum investment

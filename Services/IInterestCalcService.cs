@@ -3,13 +3,14 @@ namespace FinanceToolkitApi.Services
 {
     public interface IInterestCalcService
     {
+        Dictionary<string, decimal> SimpleInterest(Simple simple);
         /// <summary>
         /// Calculates simple accrued interest for a financial instrument using a day-count basis.
         /// The accrued interest is computed using the simple interest formula:
         /// Accrued Interest = Principal × (Annual Rate ÷ 100) × (Days Accrued ÷ Day Count Basis)
         Dictionary<string, decimal> SimpleAccruedInterest(SimpleAccrued accruedRequest);
-        Dictionary<string, decimal> CompoundAccruedInterest(CompoundAccrued accruedRequest);
-        Dictionary<string, decimal> CalcualateCompoundInterest(CompoundAccrued compoundRequest);
+        List<Dictionary<string, decimal>> CompoundAccruedInterest(CompoundAccrued accruedRequest);
+        Dictionary<string, decimal> CompoundInterest(Compound compoundRequest);
         Dictionary<string, decimal> CompoundInterestWithContributions(CompoundWithContributions compoundRequest);
 
         Dictionary<string, decimal> AmortizedInterestPayment(Amortized amortizedRequest);

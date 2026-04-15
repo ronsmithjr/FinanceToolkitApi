@@ -4,6 +4,7 @@
     {
         public static void MapInterestCalcEndpoints(this IEndpointRouteBuilder app)
         {
+            app.MapPost("/IntCalc/Simple", SimpleInterest);
             app.MapPost("/IntCalc/SimpleAccruedInterest", SimpleAccruedInterest);
             app.MapPost("/IntCalc/CompoundAccruedInterest", CompoundAccruedInterest);
 
@@ -18,7 +19,6 @@
             app.MapPost("/IntCalc/Daily", Daily);
             app.MapPost("/IntCalc/EffectiveRate", EffectiveRate);
             app.MapPost("/IntCalc/InflationAdjusted", InflationAdjusted);
-            app.MapPost("/IntCalc/Simple", Simple);
             app.MapPost("/IntCalc/TaxAdjusted", TaxAdjusted);
         }
        
