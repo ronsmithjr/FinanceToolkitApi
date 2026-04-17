@@ -2,6 +2,8 @@ using FinanceToolkitApi.EndPoints;
 using FinanceToolkitApi.MiddleWare;
 using FinanceToolkitApi.Services;
 using Serilog;
+using Polly;
+using Polly.CircuitBreaker;
 
 
 Log.Logger = new LoggerConfiguration()
@@ -11,11 +13,17 @@ Log.Logger = new LoggerConfiguration()
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog(Log.Logger);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IInterestCalcService, InterestCalcService>();
+
+
+builder.Services.AddHttpClient("HighThroughputApi:", client =>
+{
+    client.BaseAddress = new Uri("https://downstream.example.com");
+    client.Timeout = Timeout.InfiniteTimeSpan;
+}).AddPolicyHandler(ResiliencePolicies.CreateCompositePolicy());
 
 var app = builder.Build();
 
@@ -34,4 +42,5 @@ app.MapInterestCalcEndpoints();
 app.Run();
 
 Log.CloseAndFlush();
+
 
