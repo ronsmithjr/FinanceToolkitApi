@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  financetoolkitapi:
+    image: financetoolkitapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4000:5125"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=5125
+    volumes:
+      - ./Logs:/app/Logs

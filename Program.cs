@@ -18,10 +18,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IInterestCalcService, InterestCalcService>();
 
+var downstreamBaseUrl = builder.Configuration["DownstreamApi:BaseUrl"];
 
-builder.Services.AddHttpClient("HighThroughputApi:", client =>
+builder.Services.AddHttpClient("HighThroughputApi", client =>
 {
-    client.BaseAddress = new Uri("https://downstream.example.com");
+    if (!string.IsNullOrWhiteSpace(downstreamBaseUrl))
+    {
+        client.BaseAddress = new Uri(downstreamBaseUrl);
+    }
+
     client.Timeout = Timeout.InfiniteTimeSpan;
 }).AddPolicyHandler(ResiliencePolicies.CreateCompositePolicy());
 
