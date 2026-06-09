@@ -2,7 +2,7 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceToolkitApi", "FinanceToolkitApi/FinanceToolkitApi.csproj", "{CC008D85-0D22-4455-B496-B5F6D5AA45BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FinanceToolkitApi", "FinanceToolkitApi\FinanceToolkitApi.csproj", "{CC008D85-0D22-4455-B496-B5F6D5AA45BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
