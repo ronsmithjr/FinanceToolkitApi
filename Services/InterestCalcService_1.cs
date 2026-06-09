@@ -6,9 +6,6 @@ namespace FinanceToolkitApi.Services
     {
         public Dictionary<string, decimal> SimpleInterest(Simple simple)
         {
-            //var total_amt = simple.Principal * simple.Years * (1 + (simple.AnnualRate / 100));
-            //var interest = total_amt - simple.Principal;
-
            var interest = (simple.Principal * simple.AnnualRate * simple.Years) / 100;
            var total_amt = simple.Principal +  ((simple.Principal * simple.AnnualRate * simple.Years) / 100);
            
