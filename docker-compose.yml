@@ -9,7 +9,7 @@ services:
     ports:
       - "4000:5125"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_HTTP_PORTS=5125
     volumes:
       - ./Logs:/app/Logs
